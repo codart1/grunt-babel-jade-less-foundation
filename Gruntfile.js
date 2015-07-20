@@ -177,7 +177,6 @@ module.exports = function (grunt) {
         files: [{
           dot: true,
           src: [
-            '.tmp',
             '<%= config.dist %>/*',
             '!<%= config.dist %>/.git*'
           ]
@@ -368,6 +367,17 @@ module.exports = function (grunt) {
           dest: '<%= config.dist %>'
         }]
       },
+
+      tmp: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '.tmp',
+          dest: '<%= config.dist %>',
+          src: ['{,*/}*.html']
+        }]
+      },
+
       styles: {
         expand: true,
         dot: true,
@@ -435,19 +445,23 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('build', [
+    'clean:server',
     'jade',
+    'less',
+    'babel',
     'clean:dist',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
-    'concat',
-    'cssmin',
-    'uglify',
+    // 'concat',
+    // 'cssmin',
+    // 'uglify',
+    'copy:tmp',
     'copy:dist',
     'rev',
     'usemin',
-    'htmlmin'
+    // 'htmlmin'
   ]);
 
   grunt.registerTask('default', [
